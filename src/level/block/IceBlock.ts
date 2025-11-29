@@ -21,9 +21,9 @@ export class IceBlock extends Block {
 
   getWalkSpeed(player: Player): number {
     if (player.getSelectedItem() === Item.skates) {
-      return 1.4;
+      return 0.05;
     }
-    return 0.05;
+    return 1.4;
   }
 
   getFriction(player: Player): number {
