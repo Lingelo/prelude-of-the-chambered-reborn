@@ -1,4 +1,3 @@
-import { Art } from "../../Art";
 import { Sound } from "../../Sound";
 import { Sprite } from "../../gui/Sprite";
 import type { Entity } from "../../entities/Entity";
@@ -15,18 +14,20 @@ export class BarsBlock extends Block {
   constructor() {
     super();
     this.blocksMotion = true;
-    this.barsSprite = new Sprite(0, 0, 0, 8, Art.getCol(0x202020));
+    this.barsSprite = new Sprite(0, 0, 0, 0, 0x202020);
     this.sprites.push(this.barsSprite);
   }
 
   use(_level: Level, item: Item): boolean {
+    if (this.open) return false;
+
     if (item === Item.cutters) {
-      this.open = true;
-      this.barsSprite.removed = true;
       Sound.cut.play();
-      return true;
+      this.barsSprite.tex = 1;
+      this.open = true;
     }
-    return false;
+
+    return true;
   }
 
   blocks(entity: Entity): boolean {
