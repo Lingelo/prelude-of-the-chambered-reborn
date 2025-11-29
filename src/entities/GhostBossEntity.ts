@@ -20,35 +20,49 @@ export class GhostBossEntity extends EnemyEntity {
 
   tick(): void {
     this.animTime++;
-    this.sprite!.tex = this.defaultTex + ((this.animTime / 10) % 2 << 0);
+    this.sprite!.tex = this.defaultTex + ((this.animTime / 10) << 0) % 2;
 
     const player = this.level!.player;
     if (player != null) {
-      const xd = player.x - this.x;
-      const zd = player.z - this.z;
-      const dd = Math.sqrt(xd * xd + zd * zd);
-      if (dd < 1.5) {
-        if (player.hurtTime === 0) {
-          player.hurt(this, 2);
-        }
-      }
-      this.rotatePos += 0.1;
-      const rot = Math.atan2(xd, zd) + Math.sin(this.rotatePos) * 0.5;
-      this.xa += Math.sin(rot) * 0.004;
-      this.za += Math.cos(rot) * 0.004;
+      let xd = player.x + Math.sin(this.rotatePos) * 2 - this.x;
+      let zd = player.z + Math.cos(this.rotatePos) * 2 - this.z;
+      let dd = xd * xd + zd * zd;
 
-      if (this.shootDelay > 0) this.shootDelay--;
-      else if (dd < 6) {
-        this.shootDelay = 20;
-        this.level!.addEntity(
-          new Bullet(this, this.x, this.z, Math.atan2(xd, zd), 0.2, 24, 0xffffff)
-        );
+      if (dd < 1) {
+        this.rotatePos += 0.04;
+      } else {
+        this.rotatePos = player.rot;
+      }
+
+      if (dd < 4 * 4) {
+        dd = Math.sqrt(dd);
+        xd /= dd;
+        zd /= dd;
+
+        this.xa += xd * 0.006;
+        this.za += zd * 0.006;
+
+        if (this.shootDelay > 0) this.shootDelay--;
+        else if (Math.random() < 0.1) {
+          this.shootDelay = 10;
+          this.level!.addEntity(
+            new Bullet(
+              this,
+              this.x,
+              this.z,
+              Math.atan2(player.x - this.x, player.z - this.z),
+              0.2,
+              1,
+              this.defaultColor
+            )
+          );
+        }
       }
     }
 
     this.move();
-    this.xa *= 0.8;
-    this.za *= 0.8;
+    this.xa *= 0.9;
+    this.za *= 0.9;
   }
 
   hurt(_xd: number, _zd: number): void {

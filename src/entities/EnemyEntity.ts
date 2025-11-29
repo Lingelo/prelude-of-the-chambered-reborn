@@ -56,31 +56,21 @@ export class EnemyEntity extends Entity {
       }
     }
     this.animTime++;
-    this.sprite!.tex = this.defaultTex + (this.animTime / 10) % 2 << 0;
+    this.sprite!.tex = this.defaultTex + ((this.animTime / 10) << 0) % 2;
 
     this.move();
-    this.xa *= 0.6;
-    this.za *= 0.6;
 
-    this.rota += (this.nextGaussian() * 0.1) << 0;
-
-    this.rota *= 0.8;
-    this.rot += this.rota;
-
-    const player = this.level!.player;
-    if (player != null) {
-      const xd = player.x - this.x;
-      const zd = player.z - this.z;
-      const dd = Math.sqrt(xd * xd + zd * zd);
-      if (dd < 1.5 && player.hurtTime === 0) {
-        player.hurt(this, 1);
-      }
-      if (dd < 4) {
-        this.rot = Math.atan2(xd, zd);
-        this.xa += Math.sin(this.rot) * 0.004 * this.runSpeed;
-        this.za += Math.cos(this.rot) * 0.004 * this.runSpeed;
-      }
+    if (this.xa === 0 || this.za === 0) {
+      this.rota += this.nextGaussian() * Math.random() * 0.3;
     }
+
+    this.rota += this.nextGaussian() * Math.random() * this.spinSpeed;
+    this.rot += this.rota;
+    this.rota *= 0.8;
+    this.xa *= 0.8;
+    this.za *= 0.8;
+    this.xa += Math.sin(this.rot) * 0.004 * this.runSpeed;
+    this.za += Math.cos(this.rot) * 0.004 * this.runSpeed;
   }
 
   use(source: Entity, item: Item): boolean {

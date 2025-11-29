@@ -11,29 +11,35 @@ export class GhostEntity extends EnemyEntity {
 
   tick(): void {
     this.animTime++;
-    this.sprite!.tex = this.defaultTex + ((this.animTime / 10) % 2 << 0);
+    this.sprite!.tex = this.defaultTex + ((this.animTime / 10) << 0) % 2;
 
     const player = this.level!.player;
     if (player != null) {
-      const xd = player.x - this.x;
-      const zd = player.z - this.z;
-      const dd = Math.sqrt(xd * xd + zd * zd);
-      if (dd < 1.5) {
-        if (player.hurtTime === 0) {
-          player.hurt(this, 2);
+      let xd = player.x + Math.sin(this.rotatePos) - this.x;
+      let zd = player.z + Math.cos(this.rotatePos) - this.z;
+      let dd = xd * xd + zd * zd;
+
+      if (dd < 4 * 4) {
+        if (dd < 1) {
+          this.rotatePos += 0.04;
+        } else {
+          this.rotatePos = player.rot;
+          this.xa += (Math.random() - 0.5) * 0.02;
+          this.za += (Math.random() - 0.5) * 0.02;
         }
-      }
-      if (dd < 6) {
-        this.rotatePos += 0.1;
-        const rot = Math.atan2(xd, zd) + Math.sin(this.rotatePos) * 0.5;
-        this.xa += Math.sin(rot) * 0.004;
-        this.za += Math.cos(rot) * 0.004;
+
+        dd = Math.sqrt(dd);
+        xd /= dd;
+        zd /= dd;
+
+        this.xa += xd * 0.004;
+        this.za += zd * 0.004;
       }
     }
 
     this.move();
-    this.xa *= 0.8;
-    this.za *= 0.8;
+    this.xa *= 0.9;
+    this.za *= 0.9;
   }
 
   hurt(_xd: number, _zd: number): void {
