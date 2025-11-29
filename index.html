@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Prelude of the Chambered: Reborn</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #000;
+        color: #aaa;
+        font-family: 'Press Start 2P', monospace;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1rem;
+        margin-bottom: 20px;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      #gamescreen {
+        border: 3px solid #444;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+      }
+
+      #status {
+        margin-top: 15px;
+        font-size: 0.7rem;
+        color: #ffff80;
+      }
+
+      .controls {
+        margin-top: 20px;
+        font-size: 0.7rem;
+        color: #a0a0a0;
+        text-align: center;
+        max-width: 800px;
+        line-height: 2.5;
+      }
+
+      .controls kbd {
+        background: #222;
+        padding: 4px 8px;
+        border: 1px solid #ffff80;
+        color: #ffff80;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Prelude of the Chambered: Reborn</h1>
+    <canvas id="gamescreen"></canvas>
+    <p id="status">Loading...</p>
+    <div class="controls">
+      <p>
+        <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Move |
+        <kbd>Q</kbd><kbd>E</kbd> Turn |
+        <kbd>Space</kbd> Use |
+        <kbd>1</kbd>-<kbd>8</kbd> Items |
+        <kbd>Esc</kbd> Pause
+      </p>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
