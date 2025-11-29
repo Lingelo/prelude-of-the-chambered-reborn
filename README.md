@@ -5,6 +5,8 @@ A modern TypeScript/Vite port of **"Prelude of the Chambered"**, a retro first-p
 ![Status](https://img.shields.io/badge/Status-Playable-brightgreen)
 [![Deploy](https://github.com/Lingelo/prelude-of-the-chambered-reborn/actions/workflows/deploy.yml/badge.svg)](https://github.com/Lingelo/prelude-of-the-chambered-reborn/actions/workflows/deploy.yml)
 
+**[Play Now](https://lingelo.github.io/prelude-of-the-chambered-reborn/)**
+
 ## About the Game
 
 Prelude of the Chambered is a first-person dungeon crawler with Wolfenstein 3D-style raycasting graphics. You wake up in a prison and must escape by exploring dungeons, solving puzzles, defeating enemies, and collecting items.
