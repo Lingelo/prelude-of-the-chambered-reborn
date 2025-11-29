@@ -28,7 +28,7 @@ export class OgreEntity extends EnemyEntity {
         const dd = Math.sqrt(xd * xd + zd * zd);
         if (dd < 6) {
           this.level!.addEntity(
-            new Bullet(this, this.x, this.z, Math.atan2(xd, zd), 0.3, 24, 0x228822)
+            new Bullet(this, this.x, this.z, Math.atan2(xd, zd), 0.3, 1, this.defaultColor)
           );
         }
       }

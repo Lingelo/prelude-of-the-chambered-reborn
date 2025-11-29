@@ -27,7 +27,7 @@ export class BossOgre extends EnemyEntity {
       this.shootPhase++;
       for (let i = 0; i < 4; i++) {
         const rot = Math.PI / 2 * i + this.shootPhase * 0.25;
-        this.level!.addEntity(new Bullet(this, this.x, this.z, rot, 0.4, 24, 0x228822));
+        this.level!.addEntity(new Bullet(this, this.x, this.z, rot, 0.4, 1, this.defaultColor));
       }
     }
   }
