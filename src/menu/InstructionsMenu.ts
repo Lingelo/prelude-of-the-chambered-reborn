@@ -7,6 +7,7 @@ export class InstructionsMenu extends Menu {
   tickDelay: number = 30;
 
   render(target: Bitmap): void {
+    target.fill(0, 0, target.width, target.height, 0);
     target.drawString("Instructions", (target.width - 11 * 6) / 2, 10, 0xffffff);
 
     const lines = [
