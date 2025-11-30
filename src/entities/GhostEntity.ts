@@ -29,11 +29,13 @@ export class GhostEntity extends EnemyEntity {
         }
 
         dd = Math.sqrt(dd);
-        xd /= dd;
-        zd /= dd;
+        if (dd > 0.001) {
+          xd /= dd;
+          zd /= dd;
 
-        this.xa += xd * 0.004;
-        this.za += zd * 0.004;
+          this.xa += xd * 0.004;
+          this.za += zd * 0.004;
+        }
       }
     }
 

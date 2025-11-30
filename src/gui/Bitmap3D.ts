@@ -387,6 +387,8 @@ export class Bitmap3D extends Bitmap {
       const yPixelTop = yPixel00 + (yPixel10 - yPixel00) * pr - 0.5;
       const yPixelBottom = yPixel01 + (yPixel11 - yPixel01) * pr;
 
+      if (yPixelBottom <= yPixelTop) continue;
+
       let i_yp0 = Math.ceil(yPixelTop);
       let i_yp1 = Math.ceil(yPixelBottom);
       if (i_yp0 < 0) i_yp0 = 0;

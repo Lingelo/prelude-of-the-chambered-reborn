@@ -255,8 +255,10 @@ export class Player extends Entity {
     const xd = enemy.x - this.x;
     const zd = enemy.z - this.z;
     const dd = Math.sqrt(xd * xd + zd * zd);
-    this.xa -= (xd / dd) * 0.1;
-    this.za -= (zd / dd) * 0.1;
+    if (dd > 0.001) {
+      this.xa -= (xd / dd) * 0.1;
+      this.za -= (zd / dd) * 0.1;
+    }
     this.rota += (Math.random() - 0.5) * 0.2;
   }
 

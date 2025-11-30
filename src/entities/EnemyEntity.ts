@@ -86,8 +86,10 @@ export class EnemyEntity extends Entity {
     this.hurtTime = 15;
 
     const dd = Math.sqrt(xd * xd + zd * zd);
-    this.xa += (xd / dd) * 0.2;
-    this.za += (zd / dd) * 0.2;
+    if (dd > 0.001) {
+      this.xa += (xd / dd) * 0.2;
+      this.za += (zd / dd) * 0.2;
+    }
 
     Sound.hurt2.play();
     this.health--;
