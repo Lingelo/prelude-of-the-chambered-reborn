@@ -59,13 +59,11 @@ export class Game {
     this.level!.removeEntityImmediately(this.player!);
     this.level = Level.loadLevel(this, name);
     this.level.findSpawn(id);
-    console.log(`switchLevel to ${name}: spawn found at (${this.level.xSpawn}, ${this.level.ySpawn})`);
     this.player!.x = this.level.xSpawn;
     this.player!.z = this.level.ySpawn;
     this.level.getBlock(this.level.xSpawn, this.level.ySpawn).wait = true;
     this.player!.x += Math.sin(this.player!.rot) * 0.2;
     this.player!.z += Math.cos(this.player!.rot) * 0.2;
-    console.log(`Player final position: (${this.player!.x}, ${this.player!.z})`);
     this.level.addEntity(this.player!);
   }
 

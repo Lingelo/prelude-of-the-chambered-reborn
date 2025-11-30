@@ -14,6 +14,7 @@ import { GhostBossEntity } from "../entities/GhostBossEntity";
 import { BoulderEntity } from "../entities/BoulderEntity";
 import { GotLootMenu } from "../menu/GotLootMenu";
 import { createLevel } from "./LevelRegistry";
+import { LevelColors } from "./LevelColors";
 import { Block } from "./block/Block";
 import { SolidBlock } from "./block/SolidBlock";
 import { DoorBlock } from "./block/DoorBlock";
@@ -164,60 +165,60 @@ export class Level {
 
   decorateBlock(x: number, y: number, block: Block, col: number): void {
     block.decorate(this, x, y);
-    if (col === 0xffff00) {
+    if (col === LevelColors.SPAWN) {
       this.xSpawn = x;
       this.ySpawn = y;
     }
-    if (col === 0xaa5500) this.addEntity(new BoulderEntity(x, y));
-    if (col === 0xff0000) this.addEntity(new BatEntity(x, y));
-    if (col === 0xff0001) this.addEntity(new BatBossEntity(x, y));
-    if (col === 0xff0002) this.addEntity(new OgreEntity(x, y));
-    if (col === 0xff0003) this.addEntity(new BossOgre(x, y));
-    if (col === 0xff0004) this.addEntity(new EyeEntity(x, y));
-    if (col === 0xff0005) this.addEntity(new EyeBossEntity(x, y));
-    if (col === 0xff0006) this.addEntity(new GhostEntity(x, y));
-    if (col === 0xff0007) this.addEntity(new GhostBossEntity(x, y));
-    if (col === 0x1a2108 || col === 0xff0007) {
+    if (col === LevelColors.BOULDER) this.addEntity(new BoulderEntity(x, y));
+    if (col === LevelColors.BAT) this.addEntity(new BatEntity(x, y));
+    if (col === LevelColors.BAT_BOSS) this.addEntity(new BatBossEntity(x, y));
+    if (col === LevelColors.OGRE) this.addEntity(new OgreEntity(x, y));
+    if (col === LevelColors.OGRE_BOSS) this.addEntity(new BossOgre(x, y));
+    if (col === LevelColors.EYE) this.addEntity(new EyeEntity(x, y));
+    if (col === LevelColors.EYE_BOSS) this.addEntity(new EyeBossEntity(x, y));
+    if (col === LevelColors.GHOST) this.addEntity(new GhostEntity(x, y));
+    if (col === LevelColors.GHOST_BOSS) this.addEntity(new GhostBossEntity(x, y));
+    if (col === LevelColors.DARK_FLOOR || col === LevelColors.GHOST_BOSS) {
       block.floorTex = 7;
       block.ceilTex = 7;
     }
 
-    if (col === 0xc6c6c6) block.col = Art.getCol(0xa0a0a0);
-    if (col === 0xc6c697) block.col = Art.getCol(0xa0a0a0);
-    if (col === 0x653a00) {
+    if (col === LevelColors.DOOR) block.col = Art.getCol(0xa0a0a0);
+    if (col === LevelColors.LOCKED_DOOR) block.col = Art.getCol(0xa0a0a0);
+    if (col === LevelColors.WOOD_FLOOR) {
       block.floorCol = Art.getCol(0xb56600);
       block.floorTex = 3 * 8 + 1;
     }
 
-    if (col === 0x93ff9b) {
+    if (col === LevelColors.SOLID_GREEN) {
       block.col = Art.getCol(0x2aaf33);
       block.tex = 8;
     }
   }
 
   getNewBlock(_x: number, _y: number, col: number): Block {
-    if (col === 0x93ff9b) return new SolidBlock();
-    if (col === 0x009300) return new PitBlock();
-    if (col === 0xffffff) return new SolidBlock();
-    if (col === 0x00ffff) return new VanishBlock();
-    if (col === 0xffff64) return new ChestBlock();
-    if (col === 0x0000ff) return new WaterBlock();
-    if (col === 0xff3a02) return new TorchBlock();
-    if (col === 0x4c4c4c) return new BarsBlock();
-    if (col === 0xff66ff) return new LadderBlock(false);
-    if (col === 0x9e009e) return new LadderBlock(true);
-    if (col === 0xc1c14d) return new LootBlock();
-    if (col === 0xc6c6c6) return new DoorBlock();
-    if (col === 0x00ffa7) return new SwitchBlock();
-    if (col === 0x009380) return new PressurePlateBlock();
-    if (col === 0xff0005) return new IceBlock();
-    if (col === 0x3f3f60) return new IceBlock();
-    if (col === 0xc6c697) return new LockedDoorBlock();
-    if (col === 0xffba02) return new AltarBlock();
-    if (col === 0x749327) return new SpiritWallBlock();
-    if (col === 0x1a2108) return new Block();
-    if (col === 0x00c2a7) return new FinalUnlockBlock();
-    if (col === 0x000056) return new WinBlock();
+    if (col === LevelColors.SOLID_GREEN) return new SolidBlock();
+    if (col === LevelColors.PIT) return new PitBlock();
+    if (col === LevelColors.SOLID) return new SolidBlock();
+    if (col === LevelColors.VANISH) return new VanishBlock();
+    if (col === LevelColors.CHEST) return new ChestBlock();
+    if (col === LevelColors.WATER) return new WaterBlock();
+    if (col === LevelColors.TORCH) return new TorchBlock();
+    if (col === LevelColors.BARS) return new BarsBlock();
+    if (col === LevelColors.LADDER_DOWN) return new LadderBlock(false);
+    if (col === LevelColors.LADDER_UP) return new LadderBlock(true);
+    if (col === LevelColors.LOOT) return new LootBlock();
+    if (col === LevelColors.DOOR) return new DoorBlock();
+    if (col === LevelColors.SWITCH) return new SwitchBlock();
+    if (col === LevelColors.PRESSURE_PLATE) return new PressurePlateBlock();
+    if (col === LevelColors.EYE_BOSS) return new IceBlock();
+    if (col === LevelColors.ICE) return new IceBlock();
+    if (col === LevelColors.LOCKED_DOOR) return new LockedDoorBlock();
+    if (col === LevelColors.ALTAR) return new AltarBlock();
+    if (col === LevelColors.SPIRIT_WALL) return new SpiritWallBlock();
+    if (col === LevelColors.DARK_FLOOR) return new Block();
+    if (col === LevelColors.FINAL_UNLOCK) return new FinalUnlockBlock();
+    if (col === LevelColors.WIN) return new WinBlock();
 
     return new Block();
   }
@@ -262,15 +263,11 @@ export class Level {
   }
 
   tick(): void {
-    for (let i = 0; i < this.entities.length; i++) {
-      const e = this.entities[i]!;
+    for (const e of this.entities) {
       e.tick();
       e.updatePos();
-      if (e.isRemoved()) {
-        this.entities.splice(i, 1);
-        i--;
-      }
     }
+    this.entities = this.entities.filter((e) => !e.isRemoved());
 
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {

@@ -1,4 +1,5 @@
 import { Sound } from "../Sound";
+import type { Block } from "../level/block/Block";
 import { IceBlock } from "../level/block/IceBlock";
 import { WaterBlock } from "../level/block/WaterBlock";
 import { Bullet } from "./Bullet";
@@ -21,7 +22,7 @@ export class Player extends Entity {
   deadTime: number = 0;
   ammo: number = 0;
   potions: number = 0;
-  lastBlock: unknown = null;
+  lastBlock: Block | null = null;
   items: Item[];
   sliding: boolean = false;
   time: number = 0;
@@ -265,7 +266,7 @@ export class Player extends Entity {
   collide(entity: Entity): void {
     if (entity instanceof Bullet) {
       const bullet = entity;
-      if (bullet.owner.constructor.name === "Player") {
+      if (bullet.owner instanceof Player) {
         return;
       }
       if (this.hurtTime > 0) return;

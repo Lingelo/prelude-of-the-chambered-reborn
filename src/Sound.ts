@@ -6,6 +6,15 @@ class SoundInstance {
     this.audio.volume = 0.3;
   }
 
+  onReady(callback: () => void): void {
+    if (this.audio.readyState >= 3) {
+      callback();
+    } else {
+      this.audio.addEventListener("canplaythrough", callback, { once: true });
+      this.audio.addEventListener("error", callback, { once: true });
+    }
+  }
+
   play(): void {
     this.audio.currentTime = 0;
     this.audio.play().catch(() => {});
@@ -36,27 +45,12 @@ export class Sound {
   static treasure: SoundInstance;
 
   static async loadSound(name: string): Promise<string> {
-    return new Promise((resolve) => {
-      const audio = new Audio();
-      audio.addEventListener(
-        "canplaythrough",
-        () => {
-          resolve(name);
-        },
-        { once: true }
-      );
-      audio.addEventListener(
-        "error",
-        () => {
-          resolve(name);
-        },
-        { once: true }
-      );
-      audio.src = `res/snd/${name}.wav`;
+    const src = `res/snd/${name}.wav`;
+    const instance = new SoundInstance(src);
+    (Sound as unknown as Record<string, SoundInstance>)[name] = instance;
 
-      (Sound as unknown as Record<string, SoundInstance>)[name] = new SoundInstance(
-        `res/snd/${name}.wav`
-      );
+    return new Promise((resolve) => {
+      instance.onReady(() => resolve(name));
     });
   }
 }
