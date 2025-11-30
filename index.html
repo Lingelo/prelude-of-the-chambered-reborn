@@ -8,73 +8,534 @@
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
+      /* ═══════════════════════════════════════════════════════════
+         VARIABLES - Palette Donjon Sombre
+         ═══════════════════════════════════════════════════════════ */
+      :root {
+        --dungeon-void: #050508;
+        --dungeon-black: #0a0a0f;
+        --dungeon-dark: #12121a;
+        --stone-dark: #1a1a24;
+        --stone-mid: #2a2a3a;
+        --stone-border: #3d3d5c;
+        --torch-gold: #d4a84b;
+        --torch-glow: #ff6b35;
+        --torch-dim: #8b5a2b;
+        --blood-red: #8b3a3a;
+        --blood-bright: #cc4444;
+        --text-dim: #666680;
+        --text-mid: #9999aa;
+        --text-light: #c0c0c0;
+        --text-bright: #ffffff;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         RESET & BASE
+         ═══════════════════════════════════════════════════════════ */
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
       }
 
+      html, body {
+        height: 100%;
+        overflow: hidden;
+      }
+
       body {
-        background: #000;
-        color: #aaa;
+        background: var(--dungeon-void);
+        color: var(--text-mid);
         font-family: 'Press Start 2P', monospace;
-        min-height: 100vh;
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 20px;
+        justify-content: center;
+        min-height: 100vh;
+        position: relative;
       }
 
-      h1 {
-        font-size: 1rem;
-        margin-bottom: 20px;
-        color: #fff;
+      /* ═══════════════════════════════════════════════════════════
+         VIGNETTE EFFECT
+         ═══════════════════════════════════════════════════════════ */
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        background: radial-gradient(
+          ellipse at center,
+          transparent 0%,
+          transparent 40%,
+          rgba(0, 0, 0, 0.3) 70%,
+          rgba(0, 0, 0, 0.7) 100%
+        );
+        z-index: 1000;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         MAIN CONTAINER
+         ═══════════════════════════════════════════════════════════ */
+      .game-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         TITLE
+         ═══════════════════════════════════════════════════════════ */
+      .title {
+        text-align: center;
+        margin-bottom: 8px;
+      }
+
+      .title h1 {
+        font-size: 1.6rem;
+        color: var(--text-light);
         text-transform: uppercase;
-        letter-spacing: 2px;
+        letter-spacing: 4px;
+        margin-bottom: 8px;
+        text-shadow:
+          0 0 10px rgba(212, 168, 75, 0.3),
+          0 2px 0 var(--dungeon-black);
+      }
+
+      .title .subtitle {
+        font-size: 1rem;
+        color: var(--torch-dim);
+        letter-spacing: 8px;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         GAME FRAME
+         ═══════════════════════════════════════════════════════════ */
+      .game-frame {
+        position: relative;
+        padding: 6px;
+        background: linear-gradient(
+          145deg,
+          var(--stone-dark) 0%,
+          var(--dungeon-dark) 50%,
+          var(--stone-dark) 100%
+        );
+        border: 2px solid var(--stone-border);
+        box-shadow:
+          inset 0 0 20px rgba(0, 0, 0, 0.8),
+          0 0 30px rgba(0, 0, 0, 0.9),
+          0 0 60px rgba(212, 168, 75, 0.05);
+      }
+
+      .game-frame::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        border: 1px solid var(--stone-mid);
+        pointer-events: none;
       }
 
       #gamescreen {
-        border: 3px solid #444;
+        display: block;
         image-rendering: pixelated;
         image-rendering: crisp-edges;
+        background: var(--dungeon-black);
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         STATUS BAR
+         ═══════════════════════════════════════════════════════════ */
+      .status-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+        font-size: 0.7rem;
       }
 
       #status {
-        margin-top: 15px;
-        font-size: 0.7rem;
-        color: #ffff80;
-      }
-
-      .controls {
-        margin-top: 20px;
-        font-size: 0.7rem;
-        color: #a0a0a0;
+        color: var(--torch-dim);
+        min-width: 100px;
         text-align: center;
-        max-width: 800px;
-        line-height: 2.5;
       }
 
-      .controls kbd {
-        background: #222;
-        padding: 4px 8px;
-        border: 1px solid #ffff80;
-        color: #ffff80;
+      /* ═══════════════════════════════════════════════════════════
+         CONTROL BUTTONS
+         ═══════════════════════════════════════════════════════════ */
+      .controls-btn {
+        background: transparent;
+        border: 1px solid var(--stone-border);
+        color: var(--text-dim);
+        font-family: inherit;
+        font-size: 0.8rem;
+        padding: 8px 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .controls-btn:hover {
+        color: var(--torch-gold);
+        border-color: var(--torch-dim);
+        box-shadow: 0 0 10px rgba(212, 168, 75, 0.2);
+      }
+
+      .controls-btn:active {
+        transform: scale(0.95);
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         HELP OVERLAY
+         ═══════════════════════════════════════════════════════════ */
+      .help-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(5, 5, 8, 0.95);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+
+      .help-overlay.visible {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .help-panel {
+        background: var(--dungeon-dark);
+        border: 2px solid var(--stone-border);
+        padding: 30px 40px;
+        max-width: 500px;
+        box-shadow:
+          0 0 60px rgba(0, 0, 0, 0.8),
+          inset 0 0 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .help-panel h2 {
+        font-size: 1rem;
+        color: var(--torch-gold);
+        text-align: center;
+        margin-bottom: 25px;
+        letter-spacing: 2px;
+      }
+
+      .help-section {
+        margin-bottom: 20px;
+      }
+
+      .help-section h3 {
+        font-size: 0.75rem;
+        color: var(--text-light);
+        margin-bottom: 12px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid var(--stone-mid);
+      }
+
+      .help-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        font-size: 0.65rem;
+      }
+
+      .help-keys {
+        display: flex;
+        gap: 6px;
+      }
+
+      .help-key {
+        background: var(--stone-dark);
+        border: 1px solid var(--torch-dim);
+        color: var(--torch-gold);
+        padding: 6px 10px;
+        font-family: inherit;
+        font-size: 0.65rem;
+        min-width: 32px;
+        text-align: center;
+      }
+
+      .help-action {
+        color: var(--text-mid);
+      }
+
+      .help-close {
+        display: block;
+        margin: 25px auto 0;
+        background: transparent;
+        border: 1px solid var(--blood-red);
+        color: var(--blood-bright);
+        font-family: inherit;
+        font-size: 0.65rem;
+        padding: 10px 24px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .help-close:hover {
+        background: var(--blood-red);
+        color: var(--text-bright);
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         FOOTER
+         ═══════════════════════════════════════════════════════════ */
+      .footer {
+        position: fixed;
+        bottom: 15px;
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        text-align: center;
+        opacity: 0.6;
+        z-index: 1;
+      }
+
+      .footer a {
+        color: var(--torch-dim);
+        text-decoration: none;
+      }
+
+      .footer a:hover {
+        color: var(--torch-gold);
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         FULLSCREEN ADJUSTMENTS (game-frame only)
+         ═══════════════════════════════════════════════════════════ */
+      .game-frame:fullscreen {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--dungeon-void);
+        /* Keep the beautiful border */
+        padding: 8px;
+        border: 3px solid var(--stone-border);
+        box-shadow:
+          inset 0 0 30px rgba(0, 0, 0, 0.9),
+          0 0 80px rgba(0, 0, 0, 0.95),
+          0 0 120px rgba(212, 168, 75, 0.08);
+      }
+
+      .game-frame:fullscreen::before {
+        content: '';
+        position: absolute;
+        top: -3px;
+        left: -3px;
+        right: -3px;
+        bottom: -3px;
+        border: 2px solid var(--stone-mid);
+        pointer-events: none;
+      }
+
+      .game-frame:fullscreen #gamescreen {
+        width: auto !important;
+        height: calc(100vh - 22px) !important;
+        max-height: calc(100vh - 22px);
+        aspect-ratio: 4 / 3;
+      }
+
+      /* Vignette overlay for fullscreen */
+      .game-frame:fullscreen::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        background: radial-gradient(
+          ellipse at center,
+          transparent 0%,
+          transparent 50%,
+          rgba(0, 0, 0, 0.4) 80%,
+          rgba(0, 0, 0, 0.85) 100%
+        );
+        z-index: 10;
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         RESPONSIVE
+         ═══════════════════════════════════════════════════════════ */
+      @media (max-height: 800px) {
+        .title h1 {
+          font-size: 0.7rem;
+        }
+        .title .subtitle {
+          display: none;
+        }
+      }
+
+      @media (max-width: 1000px) {
+        .game-frame {
+          padding: 4px;
+        }
+        #gamescreen {
+          width: 640px !important;
+          height: 480px !important;
+        }
+      }
+
+      @media (max-width: 700px) {
+        #gamescreen {
+          width: 480px !important;
+          height: 360px !important;
+        }
+        .title h1 {
+          font-size: 0.6rem;
+          letter-spacing: 1px;
+        }
       }
     </style>
   </head>
   <body>
-    <h1>Prelude of the Chambered: Reborn</h1>
-    <canvas id="gamescreen"></canvas>
-    <p id="status">Loading...</p>
-    <div class="controls">
-      <p>
-        <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Move |
-        <kbd>Q</kbd><kbd>E</kbd> Turn |
-        <kbd>Space</kbd> Use |
-        <kbd>1</kbd>-<kbd>8</kbd> Items |
-        <kbd>Esc</kbd> Pause
-      </p>
+    <div class="game-container">
+      <header class="title">
+        <h1>Prelude of the Chambered</h1>
+        <span class="subtitle">══ REBORN ══</span>
+      </header>
+
+      <div class="game-frame">
+        <canvas id="gamescreen"></canvas>
+      </div>
+
+      <div class="status-bar">
+        <button class="controls-btn" id="helpBtn" title="Controls">?</button>
+        <span id="status">Loading...</span>
+        <button class="controls-btn" id="fullscreenBtn" title="Fullscreen">⛶</button>
+      </div>
     </div>
+
+    <footer class="footer">
+      Originally by <a href="https://twitter.com/notch" target="_blank">Notch</a> (Ludum Dare 2011)
+      · TypeScript Port
+    </footer>
+
+    <!-- Help Overlay -->
+    <div class="help-overlay" id="helpOverlay">
+      <div class="help-panel">
+        <h2>⚔ CONTROLS ⚔</h2>
+
+        <div class="help-section">
+          <h3>Movement</h3>
+          <div class="help-row">
+            <span class="help-keys">
+              <span class="help-key">W</span>
+              <span class="help-key">A</span>
+              <span class="help-key">S</span>
+              <span class="help-key">D</span>
+            </span>
+            <span class="help-action">Move</span>
+          </div>
+          <div class="help-row">
+            <span class="help-keys">
+              <span class="help-key">Q</span>
+              <span class="help-key">E</span>
+            </span>
+            <span class="help-action">Turn</span>
+          </div>
+        </div>
+
+        <div class="help-section">
+          <h3>Actions</h3>
+          <div class="help-row">
+            <span class="help-keys">
+              <span class="help-key">SPACE</span>
+            </span>
+            <span class="help-action">Use / Attack</span>
+          </div>
+          <div class="help-row">
+            <span class="help-keys">
+              <span class="help-key">1</span>-<span class="help-key">8</span>
+            </span>
+            <span class="help-action">Select Item</span>
+          </div>
+          <div class="help-row">
+            <span class="help-keys">
+              <span class="help-key">ESC</span>
+            </span>
+            <span class="help-action">Pause</span>
+          </div>
+          <div class="help-row">
+            <span class="help-keys">
+              <span class="help-key">F</span>
+            </span>
+            <span class="help-action">Fullscreen</span>
+          </div>
+        </div>
+
+        <button class="help-close" id="helpClose">CLOSE</button>
+      </div>
+    </div>
+
     <script type="module" src="/src/main.ts"></script>
+    <script>
+      // Help overlay toggle
+      const helpBtn = document.getElementById('helpBtn');
+      const helpOverlay = document.getElementById('helpOverlay');
+      const helpClose = document.getElementById('helpClose');
+
+      helpBtn.addEventListener('click', () => {
+        helpOverlay.classList.add('visible');
+      });
+
+      helpClose.addEventListener('click', () => {
+        helpOverlay.classList.remove('visible');
+      });
+
+      helpOverlay.addEventListener('click', (e) => {
+        if (e.target === helpOverlay) {
+          helpOverlay.classList.remove('visible');
+        }
+      });
+
+      // Fullscreen toggle - target game-frame only
+      const fullscreenBtn = document.getElementById('fullscreenBtn');
+      const gameFrame = document.querySelector('.game-frame');
+
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          gameFrame.requestFullscreen();
+        } else {
+          document.exitFullscreen();
+        }
+      }
+
+      fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+      // Keyboard shortcut for fullscreen
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'f' || e.key === 'F') {
+          // Only if not in a text input and help overlay is not visible
+          if (document.activeElement.tagName !== 'INPUT' &&
+              !helpOverlay.classList.contains('visible')) {
+            toggleFullscreen();
+          }
+        }
+        // Close help with Escape
+        if (e.key === 'Escape' && helpOverlay.classList.contains('visible')) {
+          helpOverlay.classList.remove('visible');
+          e.stopPropagation();
+        }
+      });
+
+      // Update fullscreen button icon
+      document.addEventListener('fullscreenchange', () => {
+        fullscreenBtn.textContent = document.fullscreenElement ? '✕' : '⛶';
+      });
+    </script>
   </body>
 </html>
