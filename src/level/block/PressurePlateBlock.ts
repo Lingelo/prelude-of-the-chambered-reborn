@@ -1,3 +1,4 @@
+import { Config } from "../../Config";
 import { Sound } from "../../Sound";
 import type { Entity } from "../../entities/Entity";
 import { Block } from "./Block";
@@ -34,6 +35,6 @@ export class PressurePlateBlock extends Block {
   }
 
   getFloorHeight(_e: Entity): number {
-    return this.pressed ? -0.02 : 0.02;
+    return this.pressed ? -Config.PRESSURE_PLATE_OFFSET : Config.PRESSURE_PLATE_OFFSET;
   }
 }

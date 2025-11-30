@@ -1,4 +1,5 @@
 import { Art } from "../Art";
+import { Config } from "../Config";
 import type { Game } from "../Game";
 import type { Level } from "../level/Level";
 import { DoorBlock } from "../level/block/DoorBlock";
@@ -28,14 +29,17 @@ export class Bitmap3D extends Bitmap {
       this.zBufferWall[x] = 0;
     }
     for (let i = 0; i < this.width * this.height; i++) {
-      this.zBuffer[i] = 10000;
+      this.zBuffer[i] = Config.Z_BUFFER_MAX;
     }
 
     const player = game.player!;
     this.rot = player.rot;
-    this.xCam = player.x - Math.sin(this.rot) * 0.3;
-    this.yCam = player.z - Math.cos(this.rot) * 0.3;
-    this.zCam = -0.2 + Math.sin(player.bobPhase * 0.4) * 0.01 * player.bob - player.y;
+    this.xCam = player.x - Math.sin(this.rot) * Config.CAMERA_OFFSET;
+    this.yCam = player.z - Math.cos(this.rot) * Config.CAMERA_OFFSET;
+    this.zCam =
+      Config.CAMERA_HEIGHT +
+      Math.sin(player.bobPhase * Config.BOB_SPEED) * Config.BOB_INTENSITY * player.bob -
+      player.y;
 
     this.xCenter = this.width / 2.0;
     this.yCenter = this.height / 3.0;
@@ -46,7 +50,7 @@ export class Bitmap3D extends Bitmap {
     this.fov = this.height;
 
     const level = game.level!;
-    const i_r = 6;
+    const i_r = Config.RENDER_DISTANCE;
 
     const i_xCenter = Math.floor(this.xCam);
     const i_zCenter = Math.floor(this.yCam);
@@ -260,7 +264,7 @@ export class Bitmap3D extends Bitmap {
     const yy = yc;
     const zz = zc * rCos + xc * rSin;
 
-    if (zz < 0.1) return;
+    if (zz < Config.MIN_SPRITE_DISTANCE) return;
 
     const xPixel = xCenter - (xx / zz) * fov;
     const yPixel = (yy / zz) * fov + yCenter;

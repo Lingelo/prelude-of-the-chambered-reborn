@@ -1,4 +1,5 @@
 import { Art } from "../Art";
+import { Config } from "../Config";
 import { Sound } from "../Sound";
 import { Sprite } from "../gui/Sprite";
 import { Entity } from "./Entity";
@@ -17,7 +18,7 @@ export class KeyEntity extends Entity {
     this.z = z;
     this.sprite = new Sprite(0, 0, 0, 16 + 3, KeyEntity.COLOR);
     this.sprites.push(this.sprite);
-    this.ya = 0.025;
+    this.ya = Config.KEY_BOUNCE_SPEED;
   }
 
   tick(): void {

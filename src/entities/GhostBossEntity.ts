@@ -1,3 +1,4 @@
+import { Config } from "../Config";
 import { Sound } from "../Sound";
 import { EnemyEntity } from "./EnemyEntity";
 import { KeyEntity } from "./KeyEntity";
@@ -43,7 +44,7 @@ export class GhostBossEntity extends EnemyEntity {
         this.za += zd * 0.006;
 
         if (this.shootDelay > 0) this.shootDelay--;
-        else if (Math.random() < 0.1) {
+        else if (Math.random() < Config.GHOST_BOSS_ATTACK_CHANCE) {
           this.shootDelay = 10;
           this.level!.addEntity(
             new Bullet(
@@ -61,8 +62,8 @@ export class GhostBossEntity extends EnemyEntity {
     }
 
     this.move();
-    this.xa *= 0.9;
-    this.za *= 0.9;
+    this.xa *= Config.FRICTION_DEFAULT;
+    this.za *= Config.FRICTION_DEFAULT;
   }
 
   hurt(_xd: number, _zd: number): void {

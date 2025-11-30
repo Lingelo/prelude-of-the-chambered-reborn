@@ -1,3 +1,4 @@
+import { Config } from "../Config";
 import { Sound } from "../Sound";
 import type { Block } from "../level/block/Block";
 import { IceBlock } from "../level/block/IceBlock";
@@ -120,8 +121,8 @@ export class Player extends Entity {
         else this.za = -0.08;
         this.x += (Math.floor(this.x + 0.5) - this.x) * 0.2;
       } else {
-        this.xa -= (xm * Math.cos(this.rot) + zm * Math.sin(this.rot)) * 0.1;
-        this.za -= (zm * Math.cos(this.rot) - xm * Math.sin(this.rot)) * 0.1;
+        this.xa -= (xm * Math.cos(this.rot) + zm * Math.sin(this.rot)) * Config.PLAYER_MOVE_SPEED;
+        this.za -= (zm * Math.cos(this.rot) - xm * Math.sin(this.rot)) * Config.PLAYER_MOVE_SPEED;
       }
 
       if (!wasSliding && this.sliding) {
@@ -257,8 +258,8 @@ export class Player extends Entity {
     const zd = enemy.z - this.z;
     const dd = Math.sqrt(xd * xd + zd * zd);
     if (dd > 0.001) {
-      this.xa -= (xd / dd) * 0.1;
-      this.za -= (zd / dd) * 0.1;
+      this.xa -= (xd / dd) * Config.KNOCKBACK_PLAYER;
+      this.za -= (zd / dd) * Config.KNOCKBACK_PLAYER;
     }
     this.rota += (Math.random() - 0.5) * 0.2;
   }

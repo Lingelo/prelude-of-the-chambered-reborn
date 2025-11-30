@@ -1,3 +1,4 @@
+import { Config } from "../Config";
 import { Sound } from "../Sound";
 import { EnemyEntity } from "./EnemyEntity";
 import { KeyEntity } from "./KeyEntity";
@@ -22,7 +23,7 @@ export class BossOgre extends EnemyEntity {
   tick(): void {
     super.tick();
     if (this.shootDelay > 0) this.shootDelay--;
-    else if (Math.random() < 0.02) {
+    else if (Math.random() < Config.OGRE_SHOOT_CHANCE) {
       this.shootDelay = 5;
       this.shootPhase++;
       for (let i = 0; i < 4; i++) {

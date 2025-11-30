@@ -1,4 +1,5 @@
 import { Art } from "../Art";
+import { Config } from "../Config";
 import { Sound } from "../Sound";
 import { Sprite } from "../gui/Sprite";
 import { PoofSprite } from "../gui/PoofSprite";
@@ -14,7 +15,7 @@ export class EnemyEntity extends Entity {
   hurtTime: number = 0;
   animTime: number = 0;
   health: number = 3;
-  spinSpeed: number = 0.1;
+  spinSpeed: number = Config.ENEMY_SPIN_SPEED;
   runSpeed: number = 1;
   private haveNextGaussian: boolean = false;
   private nextNextGaussian: number = 0;
@@ -87,8 +88,8 @@ export class EnemyEntity extends Entity {
 
     const dd = Math.sqrt(xd * xd + zd * zd);
     if (dd > 0.001) {
-      this.xa += (xd / dd) * 0.2;
-      this.za += (zd / dd) * 0.2;
+      this.xa += (xd / dd) * Config.KNOCKBACK_ENEMY;
+      this.za += (zd / dd) * Config.KNOCKBACK_ENEMY;
     }
 
     Sound.hurt2.play();

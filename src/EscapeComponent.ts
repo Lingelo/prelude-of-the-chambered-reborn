@@ -1,4 +1,5 @@
 import { Art } from "./Art";
+import { Config } from "./Config";
 import { Sound } from "./Sound";
 import { Game } from "./Game";
 import { Screen } from "./gui/Screen";
@@ -93,7 +94,7 @@ export class EscapeComponent {
 
     this.running = true;
     this.lastTime = Date.now();
-    this.loopHandle = window.setInterval(() => this.run(), 1000 / 60);
+    this.loopHandle = window.setInterval(() => this.run(), 1000 / Config.TARGET_FPS);
   }
 
   stop(): void {
@@ -120,7 +121,7 @@ export class EscapeComponent {
   }
 
   tick(): void {
-    this.game!.tick(this.input!.keys);
+    this.game!.tick(this.input!);
   }
 
   render(): void {

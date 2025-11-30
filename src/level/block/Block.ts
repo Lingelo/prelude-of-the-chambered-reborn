@@ -43,10 +43,16 @@ export class Block {
   }
 
   tick(): void {
-    this.sprites = this.sprites.filter((sprite) => {
+    // Tick all sprites and remove those marked as removed (in-place for performance)
+    let writeIndex = 0;
+    for (let i = 0; i < this.sprites.length; i++) {
+      const sprite = this.sprites[i]!;
       sprite.tick();
-      return !sprite.removed;
-    });
+      if (!sprite.removed) {
+        this.sprites[writeIndex++] = sprite;
+      }
+    }
+    this.sprites.length = writeIndex;
   }
 
   removeEntity(entity: Entity): void {

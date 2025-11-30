@@ -1,4 +1,5 @@
 import { Art } from "../../Art";
+import { Config } from "../../Config";
 import type { Entity } from "../../entities/Entity";
 import { Item } from "../../entities/Item";
 import { Player } from "../../entities/Player";
@@ -28,7 +29,7 @@ export class IceBlock extends Block {
 
   getFriction(player: Player): number {
     if (player.getSelectedItem() === Item.skates) {
-      return 0.98;
+      return Config.FRICTION_ICE;
     }
     return 1.0;
   }

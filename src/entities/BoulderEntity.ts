@@ -1,4 +1,5 @@
 import { Art } from "../Art";
+import { Config } from "../Config";
 import { Sound } from "../Sound";
 import { Sprite } from "../gui/Sprite";
 import { Entity } from "./Entity";
@@ -26,8 +27,8 @@ export class BoulderEntity extends Entity {
     this.move();
     if (this.xa === 0 && xao !== 0) this.xa = -xao * 0.3;
     if (this.za === 0 && zao !== 0) this.za = -zao * 0.3;
-    this.xa *= 0.98;
-    this.za *= 0.98;
+    this.xa *= Config.FRICTION_BOULDER;
+    this.za *= Config.FRICTION_BOULDER;
     if (this.xa * this.xa + this.za * this.za < 0.0001) {
       this.xa = this.za = 0;
     }
@@ -37,8 +38,8 @@ export class BoulderEntity extends Entity {
     if (item !== Item.powerGlove) return false;
 
     Sound.roll.play();
-    this.xa += Math.sin(source.rot) * 0.1;
-    this.za += Math.cos(source.rot) * 0.1;
+    this.xa += Math.sin(source.rot) * Config.BOULDER_PUSH_FORCE;
+    this.za += Math.cos(source.rot) * Config.BOULDER_PUSH_FORCE;
     return true;
   }
 }

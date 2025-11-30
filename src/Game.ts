@@ -1,5 +1,6 @@
 import { Player } from "./entities/Player";
 import { Item } from "./entities/Item";
+import type { InputHandler } from "./InputHandler";
 import { Level } from "./level/Level";
 import type { Menu } from "./menu/Menu";
 import { TitleMenu } from "./menu/TitleMenu";
@@ -8,27 +9,30 @@ import { WinMenu } from "./menu/WinMenu";
 import { LoseMenu } from "./menu/LoseMenu";
 
 const Keys = {
-  W: 87,
-  S: 83,
-  A: 65,
-  D: 68,
-  Q: 81,
-  E: 69,
-  UP: 38,
-  DOWN: 40,
-  LEFT: 37,
-  RIGHT: 39,
-  SPACE: 32,
-  ESCAPE: 27,
-  CTRL: 17,
-  ALT: 18,
-  SHIFT: 16,
-  META: 91,
-  NUMPAD_8: 104,
-  NUMPAD_2: 98,
-  NUMPAD_4: 100,
-  NUMPAD_6: 102,
-  ONE: 49,
+  W: "w",
+  S: "s",
+  A: "a",
+  D: "d",
+  Q: "q",
+  E: "e",
+  UP: "arrowup",
+  DOWN: "arrowdown",
+  LEFT: "arrowleft",
+  RIGHT: "arrowright",
+  SPACE: " ",
+  ESCAPE: "escape",
+  CTRL: "control",
+  ALT: "alt",
+  SHIFT: "shift",
+  META: "meta",
+  NUMPAD_1: "1",
+  NUMPAD_2: "2",
+  NUMPAD_3: "3",
+  NUMPAD_4: "4",
+  NUMPAD_5: "5",
+  NUMPAD_6: "6",
+  NUMPAD_7: "7",
+  NUMPAD_8: "8",
 };
 
 export class Game {
@@ -67,7 +71,7 @@ export class Game {
     this.level.addEntity(this.player!);
   }
 
-  tick(keys: boolean[]): void {
+  tick(input: InputHandler): void {
     if (this.pauseTime > 0) {
       this.pauseTime--;
       return;
@@ -75,50 +79,68 @@ export class Game {
 
     this.time++;
 
-    const strafe = keys[Keys.CTRL] || keys[Keys.ALT] || keys[Keys.META] || keys[Keys.SHIFT];
+    const strafe =
+      input.isKeyDown(Keys.CTRL) ||
+      input.isKeyDown(Keys.ALT) ||
+      input.isKeyDown(Keys.META) ||
+      input.isKeyDown(Keys.SHIFT);
 
-    const lk = keys[Keys.LEFT] || keys[Keys.NUMPAD_4];
-    const rk = keys[Keys.RIGHT] || keys[Keys.NUMPAD_6];
+    const lk = input.isKeyDown(Keys.LEFT) || input.isKeyDown(Keys.NUMPAD_4);
+    const rk = input.isKeyDown(Keys.RIGHT) || input.isKeyDown(Keys.NUMPAD_6);
 
-    const up = keys[Keys.W] || keys[Keys.UP] || keys[Keys.NUMPAD_8];
-    const down = keys[Keys.S] || keys[Keys.DOWN] || keys[Keys.NUMPAD_2];
+    const up = input.isKeyDown(Keys.W) || input.isKeyDown(Keys.UP) || input.isKeyDown(Keys.NUMPAD_8);
+    const down = input.isKeyDown(Keys.S) || input.isKeyDown(Keys.DOWN) || input.isKeyDown(Keys.NUMPAD_2);
 
-    const left = keys[Keys.A] || (strafe && lk);
-    const right = keys[Keys.D] || (strafe && rk);
+    const left = input.isKeyDown(Keys.A) || (strafe && lk);
+    const right = input.isKeyDown(Keys.D) || (strafe && rk);
 
-    const turnLeft = keys[Keys.Q] || (!strafe && lk);
-    const turnRight = keys[Keys.E] || (!strafe && rk);
+    const turnLeft = input.isKeyDown(Keys.Q) || (!strafe && lk);
+    const turnRight = input.isKeyDown(Keys.E) || (!strafe && rk);
 
-    const use = keys[Keys.SPACE];
+    const use = input.isKeyDown(Keys.SPACE);
 
+    const slotKeys = [
+      Keys.NUMPAD_1,
+      Keys.NUMPAD_2,
+      Keys.NUMPAD_3,
+      Keys.NUMPAD_4,
+      Keys.NUMPAD_5,
+      Keys.NUMPAD_6,
+      Keys.NUMPAD_7,
+      Keys.NUMPAD_8,
+    ];
     for (let i = 0; i < 8; i++) {
-      if (keys[Keys.ONE + i]) {
-        keys[Keys.ONE + i] = false;
+      if (input.isKeyDown(slotKeys[i]!)) {
+        input.clearKey(slotKeys[i]!);
         this.player!.selectedSlot = i;
         this.player!.itemUseTime = 0;
       }
     }
 
-    if (keys[Keys.ESCAPE]) {
-      keys[Keys.ESCAPE] = false;
+    if (input.isKeyDown(Keys.ESCAPE)) {
+      input.clearKey(Keys.ESCAPE);
       if (this.menu == null) {
         this.setMenu(new PauseMenu());
       }
     }
 
     if (use) {
-      keys[Keys.SPACE] = false;
+      input.clearKey(Keys.SPACE);
     }
 
     if (this.menu != null) {
-      keys[Keys.W] = keys[Keys.UP] = keys[Keys.NUMPAD_8] = false;
-      keys[Keys.S] = keys[Keys.DOWN] = keys[Keys.NUMPAD_2] = false;
-      keys[Keys.A] = false;
-      keys[Keys.D] = false;
+      input.clearKey(Keys.W);
+      input.clearKey(Keys.UP);
+      input.clearKey(Keys.NUMPAD_8);
+      input.clearKey(Keys.S);
+      input.clearKey(Keys.DOWN);
+      input.clearKey(Keys.NUMPAD_2);
+      input.clearKey(Keys.A);
+      input.clearKey(Keys.D);
 
-      this.menu.tick(this, up ?? false, down ?? false, left ?? false, right ?? false, use ?? false);
+      this.menu.tick(this, up, down, left, right, use);
     } else {
-      this.player!.tick(up ?? false, down ?? false, left ?? false, right ?? false, turnLeft ?? false, turnRight ?? false);
+      this.player!.tick(up, down, left, right, turnLeft, turnRight);
       if (use) {
         this.player!.activate();
       }

@@ -1,3 +1,4 @@
+import { Config } from "../Config";
 import { Sprite } from "./Sprite";
 
 export class RubbleSprite extends Sprite {
@@ -16,7 +17,7 @@ export class RubbleSprite extends Sprite {
     this.x += this.xa * 0.03;
     this.y += this.ya * 0.03;
     this.z += this.za * 0.03;
-    this.ya -= 0.1;
+    this.ya -= Config.RUBBLE_GRAVITY;
     if (this.y < 0) {
       this.y = 0;
       this.xa *= 0.8;

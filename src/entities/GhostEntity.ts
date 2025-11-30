@@ -1,3 +1,4 @@
+import { Config } from "../Config";
 import { EnemyEntity } from "./EnemyEntity";
 
 export class GhostEntity extends EnemyEntity {
@@ -24,8 +25,8 @@ export class GhostEntity extends EnemyEntity {
           this.rotatePos += 0.04;
         } else {
           this.rotatePos = player.rot;
-          this.xa += (Math.random() - 0.5) * 0.02;
-          this.za += (Math.random() - 0.5) * 0.02;
+          this.xa += (Math.random() - 0.5) * Config.GHOST_RANDOM_MOVE;
+          this.za += (Math.random() - 0.5) * Config.GHOST_RANDOM_MOVE;
         }
 
         dd = Math.sqrt(dd);
@@ -40,8 +41,8 @@ export class GhostEntity extends EnemyEntity {
     }
 
     this.move();
-    this.xa *= 0.9;
-    this.za *= 0.9;
+    this.xa *= Config.FRICTION_DEFAULT;
+    this.za *= Config.FRICTION_DEFAULT;
   }
 
   hurt(_xd: number, _zd: number): void {
