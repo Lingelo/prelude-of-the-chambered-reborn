@@ -33,6 +33,15 @@ const Keys = {
   NUMPAD_6: "6",
   NUMPAD_7: "7",
   NUMPAD_8: "8",
+  // AZERTY number row (unshifted)
+  AZERTY_1: "&",
+  AZERTY_2: "é",
+  AZERTY_3: '"',
+  AZERTY_4: "'",
+  AZERTY_5: "(",
+  AZERTY_6: "-",
+  AZERTY_7: "è",
+  AZERTY_8: "_",
 };
 
 export class Game {
@@ -79,17 +88,42 @@ export class Game {
 
     this.time++;
 
+    // Check for item slot selection FIRST to give it priority over movement
+    const slotKeys = [
+      [Keys.NUMPAD_1, Keys.AZERTY_1],  // Slot 0: "1" or "&"
+      [Keys.NUMPAD_2, Keys.AZERTY_2],  // Slot 1: "2" or "é"
+      [Keys.NUMPAD_3, Keys.AZERTY_3],  // Slot 2: "3" or '"'
+      [Keys.NUMPAD_4, Keys.AZERTY_4],  // Slot 3: "4" or "'"
+      [Keys.NUMPAD_5, Keys.AZERTY_5],  // Slot 4: "5" or "("
+      [Keys.NUMPAD_6, Keys.AZERTY_6],  // Slot 5: "6" or "-"
+      [Keys.NUMPAD_7, Keys.AZERTY_7],  // Slot 6: "7" or "è"
+      [Keys.NUMPAD_8, Keys.AZERTY_8],  // Slot 7: "8" or "_"
+    ];
+    let slotSelected = false;
+    for (let i = 0; i < 8; i++) {
+      const keys = slotKeys[i]!;
+      if (input.isKeyDown(keys[0]!) || input.isKeyDown(keys[1]!)) {
+        input.clearKey(keys[0]!);
+        input.clearKey(keys[1]!);
+        this.player!.selectedSlot = i;
+        this.player!.itemUseTime = 0;
+        slotSelected = true;
+        break;
+      }
+    }
+
     const strafe =
       input.isKeyDown(Keys.CTRL) ||
       input.isKeyDown(Keys.ALT) ||
       input.isKeyDown(Keys.META) ||
       input.isKeyDown(Keys.SHIFT);
 
-    const lk = input.isKeyDown(Keys.LEFT) || input.isKeyDown(Keys.NUMPAD_4);
-    const rk = input.isKeyDown(Keys.RIGHT) || input.isKeyDown(Keys.NUMPAD_6);
+    // Only use numpad keys for movement if no slot was selected this tick
+    const lk = input.isKeyDown(Keys.LEFT) || (!slotSelected && input.isKeyDown(Keys.NUMPAD_4));
+    const rk = input.isKeyDown(Keys.RIGHT) || (!slotSelected && input.isKeyDown(Keys.NUMPAD_6));
 
-    const up = input.isKeyDown(Keys.W) || input.isKeyDown(Keys.UP) || input.isKeyDown(Keys.NUMPAD_8);
-    const down = input.isKeyDown(Keys.S) || input.isKeyDown(Keys.DOWN) || input.isKeyDown(Keys.NUMPAD_2);
+    const up = input.isKeyDown(Keys.W) || input.isKeyDown(Keys.UP) || (!slotSelected && input.isKeyDown(Keys.NUMPAD_8));
+    const down = input.isKeyDown(Keys.S) || input.isKeyDown(Keys.DOWN) || (!slotSelected && input.isKeyDown(Keys.NUMPAD_2));
 
     const left = input.isKeyDown(Keys.A) || (strafe && lk);
     const right = input.isKeyDown(Keys.D) || (strafe && rk);
@@ -98,24 +132,6 @@ export class Game {
     const turnRight = input.isKeyDown(Keys.E) || (!strafe && rk);
 
     const use = input.isKeyDown(Keys.SPACE);
-
-    const slotKeys = [
-      Keys.NUMPAD_1,
-      Keys.NUMPAD_2,
-      Keys.NUMPAD_3,
-      Keys.NUMPAD_4,
-      Keys.NUMPAD_5,
-      Keys.NUMPAD_6,
-      Keys.NUMPAD_7,
-      Keys.NUMPAD_8,
-    ];
-    for (let i = 0; i < 8; i++) {
-      if (input.isKeyDown(slotKeys[i]!)) {
-        input.clearKey(slotKeys[i]!);
-        this.player!.selectedSlot = i;
-        this.player!.itemUseTime = 0;
-      }
-    }
 
     if (input.isKeyDown(Keys.ESCAPE)) {
       input.clearKey(Keys.ESCAPE);
