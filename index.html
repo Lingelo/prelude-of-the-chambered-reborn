@@ -368,6 +368,102 @@
       }
 
       /* ═══════════════════════════════════════════════════════════
+         GDPR CONSENT BANNER
+         ═══════════════════════════════════════════════════════════ */
+      .gdpr-banner {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(
+          to top,
+          var(--dungeon-black) 0%,
+          var(--dungeon-dark) 100%
+        );
+        border-top: 2px solid var(--stone-border);
+        padding: 16px 20px;
+        z-index: 3000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.8);
+        transform: translateY(100%);
+        transition: transform 0.4s ease;
+      }
+
+      .gdpr-banner.visible {
+        transform: translateY(0);
+      }
+
+      .gdpr-banner.hidden {
+        display: none;
+      }
+
+      .gdpr-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        max-width: 800px;
+        text-align: center;
+      }
+
+      .gdpr-text {
+        font-size: 0.65rem;
+        color: var(--text-mid);
+        line-height: 1.6;
+      }
+
+      .gdpr-text a {
+        color: var(--torch-gold);
+        text-decoration: none;
+      }
+
+      .gdpr-text a:hover {
+        text-decoration: underline;
+      }
+
+      .gdpr-buttons {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .gdpr-btn {
+        font-family: inherit;
+        font-size: 0.65rem;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 1px solid;
+      }
+
+      .gdpr-btn-accept {
+        background: var(--torch-dim);
+        border-color: var(--torch-gold);
+        color: var(--text-bright);
+      }
+
+      .gdpr-btn-accept:hover {
+        background: var(--torch-gold);
+        color: var(--dungeon-black);
+        box-shadow: 0 0 15px rgba(212, 168, 75, 0.4);
+      }
+
+      .gdpr-btn-refuse {
+        background: transparent;
+        border-color: var(--stone-border);
+        color: var(--text-dim);
+      }
+
+      .gdpr-btn-refuse:hover {
+        border-color: var(--text-mid);
+        color: var(--text-light);
+      }
+
+      /* ═══════════════════════════════════════════════════════════
          RESPONSIVE
          ═══════════════════════════════════════════════════════════ */
       @media (max-height: 800px) {
@@ -398,6 +494,32 @@
           font-size: 0.6rem;
           letter-spacing: 1px;
         }
+        .gdpr-banner {
+          padding: 12px 16px;
+        }
+        .gdpr-text {
+          font-size: 0.55rem;
+        }
+        .gdpr-btn {
+          font-size: 0.55rem;
+          padding: 8px 16px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .gdpr-content {
+          gap: 10px;
+        }
+        .gdpr-text {
+          font-size: 0.5rem;
+        }
+        .gdpr-buttons {
+          width: 100%;
+        }
+        .gdpr-btn {
+          flex: 1;
+          min-width: 100px;
+        }
       }
     </style>
   </head>
@@ -423,6 +545,20 @@
       Originally by <a href="https://twitter.com/notch" target="_blank">Notch</a> (Ludum Dare 2011)
       · TypeScript Port
     </footer>
+
+    <!-- GDPR Consent Banner -->
+    <div class="gdpr-banner" id="gdprBanner">
+      <div class="gdpr-content">
+        <p class="gdpr-text">
+          This site uses cookies to analyze traffic and improve your experience.
+          By clicking "Accept", you consent to the use of these cookies.
+        </p>
+        <div class="gdpr-buttons">
+          <button class="gdpr-btn gdpr-btn-accept" id="gdprAccept">Accept</button>
+          <button class="gdpr-btn gdpr-btn-refuse" id="gdprRefuse">Decline</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Help Overlay -->
     <div class="help-overlay" id="helpOverlay">
@@ -537,14 +673,74 @@
         fullscreenBtn.textContent = document.fullscreenElement ? '✕' : '⛶';
       });
     </script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-68QG8YZRF4"></script>
+<!-- GDPR Consent Management & Google Analytics -->
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  (function() {
+    const CONSENT_KEY = 'gdpr_analytics_consent';
+    const GA_ID = 'G-68QG8YZRF4';
 
-  gtag('config', 'G-68QG8YZRF4');
+    const gdprBanner = document.getElementById('gdprBanner');
+    const gdprAccept = document.getElementById('gdprAccept');
+    const gdprRefuse = document.getElementById('gdprRefuse');
+
+    // Check existing consent
+    const consent = localStorage.getItem(CONSENT_KEY);
+
+    function loadGoogleAnalytics() {
+      // Load gtag.js script
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+      document.head.appendChild(script);
+
+      // Initialize gtag
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', GA_ID);
+    }
+
+    function showBanner() {
+      gdprBanner.classList.add('visible');
+    }
+
+    function hideBanner() {
+      gdprBanner.classList.remove('visible');
+      // Completely hide after animation
+      setTimeout(function() {
+        gdprBanner.classList.add('hidden');
+      }, 400);
+    }
+
+    function acceptConsent() {
+      localStorage.setItem(CONSENT_KEY, 'accepted');
+      hideBanner();
+      loadGoogleAnalytics();
+    }
+
+    function refuseConsent() {
+      localStorage.setItem(CONSENT_KEY, 'refused');
+      hideBanner();
+    }
+
+    // Event listeners
+    gdprAccept.addEventListener('click', acceptConsent);
+    gdprRefuse.addEventListener('click', refuseConsent);
+
+    // Initialize based on consent status
+    if (consent === 'accepted') {
+      // User already accepted - load GA immediately
+      gdprBanner.classList.add('hidden');
+      loadGoogleAnalytics();
+    } else if (consent === 'refused') {
+      // User already refused - don't show banner or load GA
+      gdprBanner.classList.add('hidden');
+    } else {
+      // No decision yet - show banner after short delay
+      setTimeout(showBanner, 500);
+    }
+  })();
 </script>
   </body>
 </html>
