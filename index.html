@@ -313,6 +313,14 @@
         color: var(--torch-gold);
       }
 
+      .footer .footer-kofi {
+        color: var(--torch-gold);
+      }
+
+      .footer .footer-kofi:hover {
+        color: var(--torch-glow);
+      }
+
       /* ═══════════════════════════════════════════════════════════
          FULLSCREEN ADJUSTMENTS (game-frame only)
          ═══════════════════════════════════════════════════════════ */
@@ -608,6 +616,7 @@
     <footer class="footer">
       Originally by <a href="https://twitter.com/notch" target="_blank">Notch</a> (Ludum Dare 2011)
       · TypeScript Port
+      · <a href="https://ko-fi.com/angelolima" target="_blank" rel="noopener" class="footer-kofi" data-kofi="game-footer">Support the port</a>
     </footer>
 
     <!-- GDPR Consent Modal -->
@@ -813,5 +822,14 @@
     }
   })();
 </script>
+    <script>
+      // GA event on Ko-fi clicks; gtag only exists once cookies are accepted.
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest && e.target.closest('a[data-kofi]');
+        if (a && typeof window.gtag === 'function') {
+          window.gtag('event', 'kofi_click', { placement: a.dataset.kofi });
+        }
+      });
+    </script>
   </body>
 </html>

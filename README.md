@@ -4,6 +4,7 @@ A modern TypeScript/Vite port of **"Prelude of the Chambered"**, a retro first-p
 
 ![Status](https://img.shields.io/badge/Status-Playable-brightgreen)
 [![Deploy](https://github.com/Lingelo/prelude-of-the-chambered-reborn/actions/workflows/deploy.yml/badge.svg)](https://github.com/Lingelo/prelude-of-the-chambered-reborn/actions/workflows/deploy.yml)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-Support%20the%20port-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/angelolima)
 
 **[Play Now](https://lingelo.github.io/prelude-of-the-chambered-reborn/)**
 
@@ -194,6 +195,10 @@ Contributions are welcome! This project aims to faithfully preserve the original
 ### Resources
 - [Original Java Source](https://github.com/skeeto/Prelude-of-the-Chambered) (archived by skeeto)
 - [Ludum Dare Entry](https://web.archive.org/web/20190716042245/http://www.ludumdare.com/compo/ludum-dare-21/?action=preview&uid=398)
+
+## Support
+
+This port is free, open source and ad-free. If you enjoyed playing it, you can [buy me a coffee on Ko-fi](https://ko-fi.com/angelolima) ☕. Donations support my work on the port, not the original game.
 
 ## License
 
